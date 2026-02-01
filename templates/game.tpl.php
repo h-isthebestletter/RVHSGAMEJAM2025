@@ -5,8 +5,8 @@
     <body>
         <?php
             include_once 'templates/navbar.tpl.php';
-            include_once 'backend/gameFileUtils.inc.php';
             include_once 'templates/stars.tpl.php';
+            include_once 'backend/pastGames.inc.php';
             require_once 'backend/Defaults/connect.php';
 
             // there are 2 parts to this chunk of php:
@@ -15,17 +15,18 @@
 
             $gameId = $_GET['gameId'];
 
-            // get game info
-            $gameInfo = sqlQueryObject(
-                $conn,
-                'SELECT name, description, genre, creators, link, trailer, year FROM pastgames WHERE gameId = ?',
-                [$gameId]
-            );
+            $gameInfo = null;
+            foreach ($pastGames as $year) {
+                foreach ($year as $id => $info) {
+                    if ($id === $gameId) {
+                        $gameInfo = $info;
+                        break;
+                    }
+                }
+            }
 
-            $thumbnail = convertToFileLink($gameInfo->name, $gameInfo->year, 1);
-
-            $thumbnailExists = file_exists($thumbnail);
-            $trailerExists = isset($gameInfo->trailer);
+            $thumbnailExists = file_exists($gameInfo->thumbnail);
+            $trailerExists = isset($gameInfo->video);
 
             // get comment info
             $userEmail = $_SESSION['userEmail'];
@@ -64,12 +65,12 @@
                 }
                 if ($trailerExists) {
                     ?>
-                    <iframe id="trailer" class="thumbnail" src="<?php echo $gameInfo->trailer ?>"></iframe>
+                    <iframe id="trailer" class="thumbnail" src="<?php echo $gameInfo->video ?>"></iframe>
                     <?php
                 }
                 if ($thumbnailExists) {
                     ?>
-                    <img id="thumbnail" class="thumbnail" src="<?php echo $thumbnail ?>">
+                    <img id="thumbnail" class="thumbnail" src="<?php echo $gameInfo->thumbnail ?>">
                     <?php
                 }
                 if ($trailerExists || $thumbnailExists) {
@@ -117,7 +118,7 @@
                 <div class="anchor-button">Play Game</div>
             </a>
 
-            <div id='game-description'><?php echo $gameInfo->description ?></div>
+            <div id='game-description'><?php echo nl2br($gameInfo->description) ?></div>
             <?php
             if (isset($_SESSION['userEmail'])) {
                 ?>
@@ -195,38 +196,3 @@
         </div>
     </body>
 </html>
-
-<?php
-/*
-Database instructions
-comments(Id, UserEmail, comment, GameName)
-*Identify comment through unique id
-*Identify the person who gave the comment to retrieve pfp and username
-*Identify comment to append to page
-*Identify GameName to append to the correct game page
-
-games(Id, Thumbnail, GameName, Author, Genre, Descriptions, GameFiles, Trailer)
-*Identify game through unique id
-*Identify Thumbnail to append to page
-*Identify GameName to append to page
-*Identify Author to append to page
-*Identify Genre to append to papge
-*Identify Descriptions to append to page
-*Identify GameFiles for downloading when press 'play game'
-*Includes Trailer and pictures of gameplay to append on game page
-
-ratings(Id, userEmail, GameName, MainRating, ThemeRating, AestheticRating, FunRating
-*Identify ratings through unique id
-*Identify who gave the rating to save their rating on the page when they login
-*Identify GameName to know which gamepage to save the rating at
-*Identify MainRating to save the rating on page and calculate average rating
-*Identify ThemeRating to save the rating on page and calculate average theme rating
-*Identify AestheticRating to save the rating on page and calculate average aesthetic rating
-*Identify FunRating to save the rating on page and calculate average fun rating
-
-users(UserEmail, username, pfp)
-*Identify a user based on their email
-*Username is used for referring to a user on the page and to append to page
-*Identify pfp to append to comment section-->
-*/
-?>

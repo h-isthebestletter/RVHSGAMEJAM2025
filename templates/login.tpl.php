@@ -88,4 +88,3 @@
         header("Location: $googleUrl");
         die();
     }
-?>

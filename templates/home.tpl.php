@@ -175,7 +175,7 @@
                         In-game tutorials are also encouraged to enhance user experience.
                     </td>
                     <td>
-                        Submit <b>3-4 Screenshots</b> of your game’s content, and a logo.
+                        Submit <b>3-4 Screenshots</b> of your game's content, and a logo.
                         <b>Optionally</b>, submit a <b>one-minute video</b> (up to 16MB) to showcase
                         your game's mechanics and thematic relevance.
                     </td>

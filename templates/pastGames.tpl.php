@@ -53,30 +53,30 @@
                 }
                 
                 // title
-                $title = htmlspecialchars($game['title']);
+                $title = htmlspecialchars($game->title);
                 echo "<h2>$title</h2>";
 
                 // creators
-                $creators = htmlspecialchars($game['creators']);
+                $creators = htmlspecialchars($game->creators);
                 echo "<p>by $creators</p>";
 
                 // video/thumbnail
-                if (isset($game['video'])) {
-                    $videoSrc = $game['video'];
+                if (isset($game->video)) {
+                    $videoSrc = $game->video;
                     echo '<video class="game-video" controls="">';
                     echo "<source src=\"$videoSrc\" type=\"video/mp4\">";
                     echo '</video>';
                 } else {
-                    $imageSrc = $game['thumbnail'] ?? '';
+                    $imageSrc = $game->thumbnail ?? '';
                     echo "<img class=\"game-thumbnail\" src=\"$imageSrc\">";
                 }
 
                 // description
-                $description = $game['description'];
+                $description = nl2br($game->description);
                 echo "<p>$description</p>";
 
                 // link
-                $link = $game['link'];
+                $link = $game->link;
                 echo "<a class=\"anchor-button hover\" target=\"_blank\" href=\"$link\">Visit</a>";
 
                 echo '</div>';

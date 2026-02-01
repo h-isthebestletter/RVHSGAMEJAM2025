@@ -57,4 +57,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['userEmail'])) {
     header("Location: index.php?filename=game&gameId=$gameId");
     die();
 }
-?>
